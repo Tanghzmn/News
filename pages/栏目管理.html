@@ -1,0 +1,489 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: fgb 
+ * @Date: 2019-08-07 18:16:06
+ * @LastEditTime: 2019-08-09 19:23:58
+ * @LastEditors: Please set LastEditors
+ -->
+<div>
+<style>
+	.btns-div button{
+		margin-left:30px ;	
+	}
+	.btns-div button span{
+		margin-left:5px ;	
+	}
+.modal-dialog {
+    width: 300px;
+    margin-top: 0;
+    margin-right: 0;
+}
+.backDiv {
+	font-size: 14px;
+	float: left;	
+}
+.pagination {
+    display: inline-block;
+    padding-left: 0;
+    margin: 0;
+    border-radius: 4px;
+}
+.pagination li a {
+	padding: 6px 12px;
+	font-size: 14px;
+}
+
+</style>
+	<!-- 栏目管理 -->
+	<div class="category-manage">
+		<!-- 按钮组 -->
+		<div class="btns-div">
+			<button type="button" class="btn btn-success"  data-toggle="modal"  data-target="#myModal" id="to-add">新增</button>
+			<button type="button" class="btn btn-danger" id="to-deleteall">批量删除<span class="badge" id="badge_0">0</span></button>
+			
+		</div>
+		<!-- 新增和修改模态框 -->
+		<div class="modal" id="myModal">
+				<div class="modal-dialog">
+					<div class="modal-content" style="height: 724px;">
+						<div class="modal-header text-center">
+							<div class="backDiv  close" data-dismiss="modal">					
+								<i class="glyphicon glyphicon-menu-left"></i>
+								<span>返回</span>
+							</div>
+							<div class="modal-title">
+								添加栏目
+							</div>
+						</div>
+						<div class="modal-body">
+							<form class="form">
+								<div class="form-group">
+									<label for="">栏目名称</label>
+									<input type="text" class="form-control" name="categoryName"/>
+								</div>
+								<div class="form-group">
+									<label for="">父栏目</label>
+									<select name="categoryParent" class="form-control" id="add-option">
+								</select>
+								</div>
+								<div class="form-group">
+									<label for="">描述</label>
+									<textarea name="categoryComment" cols="30" rows="5" class="form-control"></textarea>
+								</div>
+								
+							</form>
+						</div>
+						<div class="modal-footer">	
+								<button class="btn btn-success btn-sm" data-dismiss="modal">取 消</button>			
+							<button class="btn btn-success btn-sm" id="to-save">提 交</button>
+						</div>
+					</div>
+				</div>
+		</div>
+	
+
+		<!-- 表格 -->
+		<div class="table-div">
+			<table class="table table-bordered text-center">
+			 	<thead>
+			 		<tr>
+						<th class="text-center" id="to-clickall">全选</th>
+			 			<th width="20%" class="text-center">编号</th>
+				 		<th width="20%" class="text-center">名称</th>
+				 		<th width="20%" class="text-center">父栏目</th>
+				 		<th width="20%" class="text-center">描述</th>
+				 		<th class="text-center">操作</th>
+			 		</tr>
+			 	</thead>
+				<tbody>
+					<!-- <tr>
+						<td><input type="checkbox"/></td>
+				 		<td>编号</td>
+				 		<td>名称</td>
+				 		<td>父栏目</td>
+				 		<td>描述</td>
+				 		<td>
+				 			<i title="编辑" class="glyphicon glyphicon-pencil" aria-hidden="true"></i>
+							<i title="删除" class="glyphicon glyphicon-trash" aria-hidden="true"></i>
+				 		</td>
+					</tr> -->
+				</tbody>
+			</table>
+		</div>
+		<!-- 分页栏 -->		
+		<div class="fenye">
+				<nav aria-label="Page navigation">
+				<ul class="pagination pull-right">
+					<!-- <li><a href="#">&laquo;</a></li>
+					<li><a href="#">1</a></li>
+					<li><a href="#">2</a></li>
+					<li><a href="#">3</a></li>
+					<li><a href="#">4</a></li>
+					<li><a href="#">6</a></li>
+					<li><a href="#">&raquo;</a></li> -->
+				</ul>
+			</nav>
+			</div>
+		 
+	</div>
+	<script>
+		
+	
+		//全选
+	/* 	
+	var i=0
+		$("#to-clickall").click(function() {			
+			if(i==0){
+			   $('input[type=checkbox]').prop("checked",true); 
+			   i=1;
+            }else{
+				$('input[type=checkbox]').prop("checked",false); 
+			   i=0	
+							
+            }		 
+		});  
+		*/
+
+	/* 	var i=0
+		$("#to-clickall").click(function() {			
+			if(i==0){
+			   $(":checkBox").prop("checked",true); 
+			   i=1;
+            }else{
+				$(":checkBox").prop("checked",false); 
+			   i=0	
+							
+            }		
+		   
+		}); */ 
+
+		// 反选
+		$("#to-clickall").click(function() {
+					//3.1获取到所有的CheckBox
+					var checks = $(":checkBox");
+					checks.each(function() {
+						this.checked = !this.checked;
+				})
+				
+			$("#badge_0").text($("input[type=checkbox]:checked").length);
+			
+		})
+		
+
+		// console.log(getAjax);
+		// console.log($);
+		// console.log($('.category-manage tbody'));
+		// 写category的js
+		 
+		//获取数据
+		getAllCategory();
+		function getAllCategory(){
+			$('.pagination li').removeClass('active');
+			$('.pagination li.page-num:first-child').addClass('active');
+	        getAjax('/manager/category/findAllCategory','get',null,function(res){
+				// 从后台拿到的数据
+				console.log(res);
+				//console.log(res.data.length);
+				// 确定总页数
+				var totalpage = parseInt(res.data.length/10)+1;
+				//console.log(totalpage);
+				// 追加DOM  遍历数组，放置数据
+				var data = Array.from(res.data);
+				//分页
+				var $fenye = $('.fenye .pagination');
+				
+				var fenyeStr = `<li class="prev"><a  href="#" aria-label="Previous"> <span aria-hidden="true">&laquo;</span></a></li>`; 
+				for(var i = 1; i<=totalpage;i++){
+					fenyeStr = fenyeStr + `<li class="page-num"><a data-page="`+i+`" href="#">`+i+`</a></li>`
+					}
+				fenyeStr+=`<li class="next">
+		      <a href="#" aria-label="Next">
+		        <span aria-hidden="true">&raquo;</span>
+		      </a>
+		    </li>`;
+				$fenye.html(fenyeStr);
+				var str='';
+				var modeloption='<option value="" selected="selected">请选择</option>'
+				
+		        res.data.forEach(function(item,index){	
+					//console.log(item,index)				
+					if((((thisPage-1)*10)<=index)&&index<(thisPage*10)){
+			   str += `
+					<tr>
+						<td><input type="checkbox" value="`+item.id+`"/></td>
+
+						<td>`+item.id+`</td>
+						<td>`+item.name+`</td>
+						<td>`+item.comment+`</td>
+						<td>`+item.no+`</td>
+						<td>
+				 			<i title="编辑" class="glyphicon glyphicon-pencil" aria-hidden="true"></i>
+							<i title="删除" class="glyphicon glyphicon-trash"  aria-hidden="true" data-id="`+item.id+`"></i>
+				 		</td>
+					</tr>
+				`;
+
+				modeloption+=`<option value="`+item.id+`">`+item.name+`</option>`
+				}
+				//console.log(thisPage)
+			});
+			 
+			//console.log(modeloption)
+			//新增
+			$('#add-option').html(modeloption);
+			$('tbody')[0].innerHTML = str;
+			$("input[type=checkbox]").click(function() {
+			$("#badge_0").text($("input[type=checkbox]:checked").length);
+			})
+
+			},function(error){
+				console.log(error);
+			});
+
+
+		}
+		
+
+//分页
+       // 总页数
+		  var totalpage=0;
+		// 当前页数
+		var thisPage = 1;
+		$('.pagination').on('click','li',function(e){
+			// 如果有禁用，直接返回
+			if($(this).hasClass('disabled')){
+				return;
+			}
+			// 正常页数点击
+			if($(this).hasClass('page-num')){
+				//thisPage =$(e.target).attr('data-page');
+				thisPage = +($(this).text());
+				$('.pagination li').removeClass('active');
+				$(this).addClass('active');
+				if(thisPage===1){
+					$('.pagination li:first-child').addClass('disabled')
+				}else{
+					$('.pagination li:first-child').removeClass('disabled')
+				}
+				if(thisPage===totalpage){
+					$('.pagination li:last-child').addClass('disabled')
+				}else{
+					$('.pagination li:last-child').removeClass('disabled')
+				}
+			}
+			if($(this).hasClass('prev')){
+				thisPage -= 1;
+				// 设置上一个的li为选中状态
+				$('.pagination li').removeClass('active');
+				$('.pagination li').eq(thisPage).addClass('active');
+				if(thisPage ==1){
+					$(this).addClass('disabled');
+				}
+			}
+				// 下一页
+				if($(this).hasClass('next')){
+					thisPage += 1;
+				// 设置上一个的li为选中状态
+				$('.pagination li').removeClass('active');
+				$('.pagination li').eq(thisPage).addClass('active');
+				if(thisPage==totalpage){
+					$(this).addClass('disabled');
+				}
+			}
+		
+
+
+
+			// // todo
+			// // alert($(event.target).attr('data-page'));
+			// thisPage =$(e.target).attr('data-page');
+
+			// // $(e.target).parent().siblings().removeClass('active');
+			// $(e.target).parent().addClass('active');
+			// thisPage=thisPage<1?1:thisPage;
+			// //console.log(thisPage);
+			getAllCategory();
+			
+		});
+
+		
+		
+		//新增
+		function addAllCategory(obj){
+			getAjax('/manager/category/saveOrUpdateCategory','post',obj,function(res){
+				console.log(res);
+				getAllCategory();
+			},function(error){
+				console.log(error);
+			});
+		}
+	   //单行删除 (tbody给删除按钮做代理)
+	    function deleteCategory(obj){
+			getAjax('/manager/category/deleteCategoryById','get',obj,function(res){
+				console.log(res);
+				alert('删除成功')
+				getAllCategory();
+			},function(error){
+				console.log(error);
+				alert('删除失败')
+			});
+		}
+		//单行删除
+		$('tbody').on('click','i[title=删除]',function(){
+			$(this).attr('data-id');
+			console.log($(this).attr('data-id'));
+			var id=$(this).attr('data-id');
+			var obj={
+				id:id,
+			}
+			deleteCategory(obj)
+			
+		}) 
+
+		//批量删除
+		function batchDeleteCategory(obj){
+			getAjax('/manager/category/batchDeleteCategory','post',obj,function(res){
+				console.log(res);
+				alert('删除成功')
+				getAllCategory();
+			},function(error){
+				console.log(error);
+				alert('删除失败')
+			});
+		 }
+        //批量删除
+		$('#to-deleteall').click(function(){
+			var checkedNum =$("input[type='checkbox']:checked").length;
+			
+			console.log(checkedNum)
+			if(checkedNum==0){
+				alert("请至少选择一项");
+			return;
+			}
+			
+
+			if(confirm( "确定要批量删除?" )){
+				var checkList= new Array();
+					//获取到所有选中的CheckBox
+					var ischk = $(":checkBox:checked");
+					ischk.each(function(){						
+						checkList.push($(this).attr('value'));										
+					})
+					
+				console.log(checkList)
+				batchDeleteCategory({ids:checkList.join()})
+				}
+				$("#badge_0").text(0);
+				
+		})
+				
+			
+
+		//保存或更新栏目信息
+		function saveOrUpdateCategory(obj){
+			getAjax('/manager/category/saveOrUpdateCategory','post',obj,function(res){
+				console.log(res);
+				alert('保存或更新栏目信息成功')
+				getAllCategory();
+			},function(error){
+				console.log(error);
+				alert('保存或更新栏目信息失败')
+			});
+		 }
+		 	//保存或更新栏目信息		
+		 $('tbody').on('click','i[title=编辑]',function(){			
+			 $('#myModal').modal('show'); 
+			$('#to-save').html('修改');
+			//alert(1)
+		
+			//console.log($(this).parent().parent())
+			var $addTr=$(this).parent().parent()
+			var id=$addTr.children('td:eq(1)').text();			
+			var name=$addTr.children('td:eq(2)').text();
+			$('.modal [type=text]').val(name);
+			var option=$addTr.children('td:eq(3)').text();
+			$('.modal option:selected').text(option)
+			var no=$addTr.children('td:eq(4)').text();
+			$('.modal [name=categoryComment]').val(no);
+			//console.log(id,name,option,no)
+			// name=$(this).parent().parent().attr('name');
+			// textarea=$('.modal [name=categoryComment]').val();		 
+			$('#to-save').click(function(){
+			//alert(1)
+			var option=$('.modal option:selected').text();		
+			var name=$('.modal [type=text]').val();
+			var textarea=$('.modal [name=categoryComment]').val();
+			var obj={
+				id:id,
+				name:name,
+				no:textarea,				
+				comment:option,
+				} 
+			//console.log(id,name,textarea,option)
+			saveOrUpdateCategory(obj)
+		})
+			
+			
+			
+		 })
+
+      // 模态框处理
+			
+      $('#to-save').click(function(){
+		  
+		var option=$('.modal option:selected').text();
+		
+		var name=$('.modal [type=text]').val();
+		var textarea=$('.modal [name=categoryComment]').val();
+		var obj={
+				name:name,
+				no:textarea,				
+				comment:option,
+				}   
+				addAllCategory(obj);   
+		console.log(name,textarea,option)
+
+
+        if(name){
+			if(textarea){
+				if(option){				 
+          $('#myModal').modal('hide');
+			}else{
+          alert('请选择父栏目');
+
+        };					            
+          }else{
+          alert('请填写描述');
+        };
+		  
+        }else{
+          alert('请输入栏目名称');
+		
+        };
+	
+      });
+
+	  //新增不保留上次信息
+      $('#to-add').click(function(){
+        //$('#myModal').modal('show');
+		$('.modal [type=text]').val(null);
+		$('.modal [name=categoryParent]').val(null);
+       $('.modal [name=categoryComment]').val(null);
+
+
+	   
+
+      });
+  
+	
+
+	
+	</script>
+
+</div>
+
+
+
+
+
+

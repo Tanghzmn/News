@@ -1,0 +1,182 @@
+/**
+ * index.html的样式  全局的样式
+ */
+*{
+	margin:0;
+	padding: 0;
+}
+article,nav,header,img{
+	display: block;
+}
+html,body{
+	height: 100%;
+	color: green;
+}
+body{
+	display: flex;
+}
+/*左侧*/
+.info-left{
+	width: 200px;
+}
+/*右侧*/
+.info-right{
+	flex: 1;
+}
+/*头部*/
+.info-left>header,.info-right>header{
+	height: 60px;
+	border: 1px solid #333333;
+}
+.info-right>header{	
+		overflow: hidden;
+	background:#282830;
+}
+.info-right .info-content{
+    background: #eee;
+	height: calc(100% - 60px);
+	overflow: auto;
+	padding: 10px;
+/* clear: both; */
+}
+/*左侧头部*/
+.info-left>header{
+	background:#3D556D;
+	font-size:20px;
+	padding-left: 20px;
+}
+.info-left>header span{
+	line-height: 60px;
+position: relative;
+top: -3px
+}
+.info-left>header img{
+	float: left;
+	width: 40px;
+	height: 40px;
+	margin: 10px 10px 10px 20px;
+}
+/*nav*/
+.info-left nav{
+	background: #eee;
+	
+	height: calc(100% - 60px);
+	border-right:1px solid #333333;
+}
+.info-left li{
+	line-height: 30px;
+	padding:5px 10px;
+	border-bottom:1px solid #333333;
+	cursor:pointer;
+}
+.info-left li:hover{
+	color:orangered;
+	background-color:#ccc;
+}
+.info-left li i:first-child{
+	margin-right:10px;
+}
+.info-left li i:last-child{
+	float: right;
+	line-height: 30px;
+}
+/*表格div*/
+.table-div{
+	margin-top:10px;
+}
+/*表格内的图标颜色*/
+.table-div td i{
+	cursor: pointer;
+	margin-right:10px;
+}
+.table-div td i:last-child{
+	margin-right:0px;
+}
+.table-div td i[title=编辑]{
+	color:#5cb85c;
+}
+.table-div td i[title=删除]{
+	color:#c9302c;
+}
+/* 右边头部 */
+/* .info-right header{
+	overflow: hidden;
+	} */
+.noticeDiv {
+	display: inline-block;
+	line-height: 60px;
+	margin: 0px 40px;
+}
+.noticeDiv .glyphicon-list{
+	display: inline-block;
+	font-size: 25px;
+
+}
+.noticeDiv .glyphicon-volume-up{
+	display: inline-block;	
+	font-size: 35px;
+	font-weight: 600;
+	position: relative;
+	top: 8px;
+	left: 40px;
+	
+}
+.topRight .noticeNum {
+    background-color: red;
+    border-radius: 50%;
+    display: inline-block;
+    height: 25px;
+    width: 25px;
+    position: absolute;
+    top:14px;
+    left:335px;
+    line-height: 25px;
+    text-align: center;
+    color: white;
+    font-weight: 900;
+}
+.topRight .infoDiv {
+    float: right;
+    line-height: 50px;
+    height: 60px;
+	margin-right: 30px;
+
+}
+.infoDiv img {
+	display: inline-block;
+    line-height: 60px;
+	margin-top: -10px;
+}
+.infoDiv span {
+	display: inline-block;
+    font-size: 18px;
+    margin-top: 5px;
+}
+.infoDiv .glyphicon-menu-right {
+	display: inline-block;
+	position: relative;	
+    top: 4px;
+	font-size: 18px;
+}
+.icon-yun{
+	width: 40px;
+	height: 40px;
+	background:url(../images/云.png)no-repeat;
+	background-size: 30px 30px;
+    display: inline-block;
+    margin: 5px;
+    border-radius: 50%
+}
+.bg-white{
+	color: black;
+}
+.numDiv small{
+	color: black;
+}
+.numDiv span{
+	color: black;
+}
+
+
+
+
